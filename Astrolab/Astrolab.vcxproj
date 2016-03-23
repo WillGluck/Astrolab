@@ -88,7 +88,7 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>C:\opencv_git\install\include\;C:\armadillo\include\</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\opencv_git\install\include\;C:\armadillo\include\;.\Include\;.\Include\Default</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -153,21 +153,25 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Include\AstrolabFileSystem.h" />
+    <ClInclude Include="Include\AstrolabImageProcessor.h" />
+    <ClInclude Include="Include\Default\stdafx.h" />
+    <ClInclude Include="Include\Default\targetver.h" />
     <ClInclude Include="Include\AstrolabPipeline.h" />
-    <ClInclude Include="Include\FileSystem.h" />
-    <ClInclude Include="Include\ImageProcessor.h" />
-    <ClInclude Include="Include\NeuralNetwork.h" />
-    <ClInclude Include="stdafx.h" />
-    <ClInclude Include="targetver.h" />
+    <ClInclude Include="Include\AstrolabNeuralNetwork.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Astrolab.cpp" />
-    <ClCompile Include="stdafx.cpp">
+    <ClCompile Include="Source\AstrolabFileSystem.cpp" />
+    <ClCompile Include="Source\AstrolabPipeline.cpp" />
+    <ClCompile Include="Source\Default\stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="Source\AstrolabNeuralNetwork.cpp" />
+    <ClCompile Include="Source\AstrolabImageProcessor.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

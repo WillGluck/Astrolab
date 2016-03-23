@@ -14,6 +14,7 @@
 #include <vector>
 #include <fstream>
 #include <iostream>
+#include "AstrolabNeuralNetwork.h"
 
 using namespace cv;
 using namespace std;
@@ -39,6 +40,7 @@ int main() {
 
 	string folder = "C:\\images_training_rev1\\";
 	vector<string> filenames = getFileNamesFromPath(folder);
+	vector<Mat> images;
 	for (std::vector<int>::size_type i = 0; i != 1000; i++) {
 		src = imread(folder + filenames[i]);
 		//Denoise
@@ -46,6 +48,7 @@ int main() {
 		//Convert the image to Gray
 		cvtColor(src, src_gray, CV_BGR2GRAY);
 		///imshow(window_name, src_gray);
+		images.push_back(src);
 	}
 	/*
 	for (auto const& filename : filenames) {
