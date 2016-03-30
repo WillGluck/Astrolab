@@ -15,6 +15,7 @@
 #include <fstream>
 #include <iostream>
 #include "AstrolabNeuralNetwork.h"
+#include "AstrolabFileSystem.h"
 
 using namespace cv;
 using namespace std;
@@ -22,24 +23,11 @@ using namespace std;
 Mat src, src_gray, dest;
 char* window_name = "Threshold Demo";
 
-vector<string> getFileNamesFromPath(string path) {
-	DIR    *dir;
-	dirent *pdir;
-	vector<string> files;
-	dir = opendir(path.c_str());
-	while (pdir = readdir(dir))
-	{
-		if (strlen(pdir->d_name) > 3) {
-			files.push_back(pdir->d_name);
-		}
-	}
-	return files;
-}
-
 int main() {
 
+	AstrolabFileSystem fs;
 	string folder = "C:\\images_training_rev1\\";
-	vector<string> filenames = getFileNamesFromPath(folder);
+	vector<string> filenames = fs.getFileNamesFromPath(folder);
 	vector<Mat> images;
 	for (std::vector<int>::size_type i = 0; i != 1000; i++) {
 		src = imread(folder + filenames[i]);
