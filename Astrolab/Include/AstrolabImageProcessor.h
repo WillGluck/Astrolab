@@ -7,7 +7,7 @@
 class AstrolabImageProcessor {
 
 private:
-
+	char* window_name = "Astrolab Demo";
 	AstrolabFileSystem fileSystem;
 
 public:

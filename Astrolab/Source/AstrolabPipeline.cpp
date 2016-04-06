@@ -37,7 +37,6 @@ int AstrolabPipeline::executeImageProcess() {
 	for (std::vector<int>::size_type i = 0; i < imagesCount; i++) {		
 		images.push_back(cv::imread(imagesPath + filenames[i]));
 		imageProcessor.process(images.back());
-		cv::imshow(window_name, images.back());
 	}
 	return 0;
 }

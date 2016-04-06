@@ -26,8 +26,6 @@ private:
 	AstrolabImageProcessor imageProcessor;
 	AstrolabNeuralNetwork neuralNetwork;
 
-	char* window_name = "Astrolab Demo";
-
 	int executeImageProcess();
 
 	int executeNeuralNetwork();

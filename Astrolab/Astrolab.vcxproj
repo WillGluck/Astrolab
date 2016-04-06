@@ -155,6 +155,7 @@
   <ItemGroup>
     <ClInclude Include="Include\AstrolabFileSystem.h" />
     <ClInclude Include="Include\AstrolabImageProcessor.h" />
+    <ClInclude Include="Include\Astrolab.h" />
     <ClInclude Include="Include\Default\stdafx.h" />
     <ClInclude Include="Include\Default\targetver.h" />
     <ClInclude Include="Include\AstrolabPipeline.h" />
