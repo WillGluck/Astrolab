@@ -20,7 +20,7 @@ using namespace std;
 
 int main() {
 
-	AstrolabPipeline pipeline("C:\\images_training_rev1\\", 10);
+	AstrolabPipeline pipeline("C:\\images_training_rev1\\", 20);
 	pipeline.execute(ImageProcessing);
 
 }
