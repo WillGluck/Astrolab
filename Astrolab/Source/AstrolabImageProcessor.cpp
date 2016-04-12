@@ -9,9 +9,19 @@
 #include "Astrolab.h"
 #include <iostream>
 
+
 int AstrolabImageProcessor::process(cv::Mat& image) {
+	
+	const unsigned int num_input = 2;
+	const unsigned int num_output = 1;
+	const unsigned int num_layers = 3;
+	const unsigned int num_neurons_hidden = 3;
+	const float desired_error = (const float) 0.001;
+	const unsigned int max_epochs = 500000;
+	const unsigned int epochs_between_reports = 1000;
 
 	image = image(cv::Rect(106, 106, 212, 212));
+	cv::GaussianBlur(image, image, cv::Size(3, 3), 0, 0, cv::BORDER_DEFAULT);
 
 	cv::Mat gray;
 	cv::Mat binary;
@@ -28,12 +38,11 @@ int AstrolabImageProcessor::process(cv::Mat& image) {
 	//Convert the image to Gray
 
 	cv::cvtColor(image, gray, CV_BGR2GRAY);
-	//cv::fastNlMeansDenoising(gray, gray);
+	cv::fastNlMeansDenoising(gray, gray);
 
 
 	//Gauss
-	/*cv::GaussianBlur(image, image, cv::Size(3, 3), 0, 0, cv::BORDER_DEFAULT);
-	cv::imshow(window_name, image);*/
+	/*cv::imshow(window_name, image);*/
 
 	threshold(gray, binary, 20, 255, CV_THRESH_BINARY);
 	//cv::imshow(window_name, binary);
@@ -59,8 +68,20 @@ int AstrolabImageProcessor::process(cv::Mat& image) {
 	// draw your contour in mask
 	drawContours(mask_image, contours, biggerContourIndex, cv::Scalar(255), CV_FILLED);
 
-	image.copyTo(finalImage, mask_image);
+	gray.copyTo(finalImage, mask_image);
+
+	cv::blur(finalImage, finalImage, cv::Size(3, 3));
 	imshow(window_name, finalImage);
+	astro::waitEnter();
+
+	cv::Mat canny;
+	cv::Canny(finalImage, canny, 0, 50, 3);
+
+	//Hu moments
+	cv::Moments mom = cv::moments(finalImage); //Gray scale? Bordas? ....
+	double hu[7];
+	cv::HuMoments(mom, hu);
+	
 	astro::waitEnter();
 
 	return 0;
