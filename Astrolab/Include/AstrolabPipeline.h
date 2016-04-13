@@ -4,13 +4,14 @@
 
 #include "opencv2/imgproc/imgproc.hpp"
 #include "opencv2/highgui/highgui.hpp"
-#include "AstrolabFileSystem.h"
+#include "AstrolabUtils.h"
 #include "AstrolabImageProcessor.h"
 #include "AstrolabNeuralNetwork.h"
 
 enum PipelineAction {
-	ImageProcessing,
-	NeuralNetwork,
+	Denoise,
+	Train,
+	Classify,
 	FullPipeline
 };
 
@@ -18,24 +19,26 @@ class AstrolabPipeline {
 
 private:
 
-	std::string imagesPath;
-	int imagesCount;
-
-	AstrolabFileSystem fileSystem;
+	std::string images_path;
+	int images_count;
 	
-	AstrolabImageProcessor imageProcessor;
-	AstrolabNeuralNetwork neuralNetwork;
+	AstrolabImageProcessor image_processor;
+	AstrolabNeuralNetwork neural_network;
 
-	int executeImageProcess();
+	int denoiseImage();
 
-	int executeNeuralNetwork();
+	int trainNeuralNetwork();
+
+	int classifyImages();
 
 	int executeFullPipeline();
 
 public:
 
-	AstrolabPipeline(std::string initialPath, int imagesCount);
+	AstrolabPipeline();
 		
 	int execute(PipelineAction action);
+
+	void setup(std::string initialPath, int imagesCount);
 
 };

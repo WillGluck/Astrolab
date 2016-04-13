@@ -1,6 +1,7 @@
 #include "stdafx.h"
 
 #include "AstrolabImageProcessor.h"
+#include "AstrolabUtils.h"
 #include "opencv2/highgui/highgui.hpp"
 #include "opencv2/imgproc/imgproc.hpp"
 #include <opencv2/opencv.hpp>
@@ -9,16 +10,7 @@
 #include "Astrolab.h"
 #include <iostream>
 
-
-int AstrolabImageProcessor::process(cv::Mat& image) {
-	
-	const unsigned int num_input = 2;
-	const unsigned int num_output = 1;
-	const unsigned int num_layers = 3;
-	const unsigned int num_neurons_hidden = 3;
-	const float desired_error = (const float) 0.001;
-	const unsigned int max_epochs = 500000;
-	const unsigned int epochs_between_reports = 1000;
+int AstrolabImageProcessor::denoise(cv::Mat &image) {
 
 	image = image(cv::Rect(106, 106, 212, 212));
 	cv::GaussianBlur(image, image, cv::Size(3, 3), 0, 0, cv::BORDER_DEFAULT);
@@ -39,8 +31,7 @@ int AstrolabImageProcessor::process(cv::Mat& image) {
 
 	cv::cvtColor(image, gray, CV_BGR2GRAY);
 	cv::fastNlMeansDenoising(gray, gray);
-
-
+	
 	//Gauss
 	/*cv::imshow(window_name, image);*/
 
@@ -71,8 +62,8 @@ int AstrolabImageProcessor::process(cv::Mat& image) {
 	gray.copyTo(finalImage, mask_image);
 
 	cv::blur(finalImage, finalImage, cv::Size(3, 3));
-	imshow(window_name, finalImage);
-	astro::waitEnter();
+	//imshow(AstrolabUtils.window_name, finalImage);
+	//AstrolabUtils::waitEnter();
 
 	cv::Mat canny;
 	cv::Canny(finalImage, canny, 0, 50, 3);
@@ -82,7 +73,7 @@ int AstrolabImageProcessor::process(cv::Mat& image) {
 	double hu[7];
 	cv::HuMoments(mom, hu);
 	
-	astro::waitEnter();
-
+	//AstrolabUtils::waitEnter();
+	image = finalImage;
 	return 0;
 }

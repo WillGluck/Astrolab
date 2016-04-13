@@ -6,4 +6,6 @@ private:
 
 public:
 
+	void train();
+
 };

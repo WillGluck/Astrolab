@@ -154,17 +154,18 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Include\AstrolabFileSystem.h" />
+    <ClInclude Include="Include\AstrolabUtils.h" />
     <ClInclude Include="Include\AstrolabImageProcessor.h" />
     <ClInclude Include="Include\Astrolab.h" />
     <ClInclude Include="Include\Default\stdafx.h" />
     <ClInclude Include="Include\Default\targetver.h" />
     <ClInclude Include="Include\AstrolabPipeline.h" />
     <ClInclude Include="Include\AstrolabNeuralNetwork.h" />
+    <ClInclude Include="Include\DataReducer.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Astrolab.cpp" />
-    <ClCompile Include="Source\AstrolabFileSystem.cpp" />
+    <ClCompile Include="Source\AstrolabUtils.cpp" />
     <ClCompile Include="Source\AstrolabPipeline.cpp" />
     <ClCompile Include="Source\Default\stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
@@ -174,6 +175,7 @@
     </ClCompile>
     <ClCompile Include="Source\AstrolabNeuralNetwork.cpp" />
     <ClCompile Include="Source\AstrolabImageProcessor.cpp" />
+    <ClCompile Include="Source\DataReducer.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

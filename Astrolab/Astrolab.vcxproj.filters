@@ -30,13 +30,16 @@
     <ClInclude Include="Include\AstrolabNeuralNetwork.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Include\AstrolabFileSystem.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Include\AstrolabImageProcessor.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Include\Astrolab.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\DataReducer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\AstrolabUtils.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -53,10 +56,13 @@
     <ClCompile Include="Source\AstrolabPipeline.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Source\AstrolabFileSystem.cpp">
+    <ClCompile Include="Source\AstrolabImageProcessor.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Source\AstrolabImageProcessor.cpp">
+    <ClCompile Include="Source\DataReducer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\AstrolabUtils.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
