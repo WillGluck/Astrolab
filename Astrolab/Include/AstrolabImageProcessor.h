@@ -8,6 +8,6 @@ private:
 
 public:
 
-	int denoise(cv::Mat& image);
+	void denoise(cv::Mat& image);
 		
 };

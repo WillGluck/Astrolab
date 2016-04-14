@@ -33,9 +33,6 @@
     <ClInclude Include="Include\AstrolabImageProcessor.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Include\Astrolab.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Include\DataReducer.h">
       <Filter>Header Files</Filter>
     </ClInclude>

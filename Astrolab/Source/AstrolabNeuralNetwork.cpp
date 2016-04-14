@@ -5,6 +5,12 @@
 
 void AstrolabNeuralNetwork::train() {
 
+
+	//Hu moments
+	//cv::Moments mom = cv::moments(final_image); //Gray scale? Bordas? ....
+	//double hu[7];
+	//cv::HuMoments(mom, hu);
+
 	const unsigned int num_input = 2;
 	const unsigned int num_output = 1;
 	const unsigned int num_layers = 3;
@@ -15,6 +21,5 @@ void AstrolabNeuralNetwork::train() {
 
 	struct fann *ann = fann_create_standard(num_layers, num_input,
 		num_neurons_hidden, num_output);
-
 
 }

@@ -19,54 +19,40 @@ void AstrolabPipeline::setup(std::string imagesPath, int imagesCount) {
 	this->images_count = imagesCount;
 }
 
-int AstrolabPipeline::execute(PipelineAction action) {
+void AstrolabPipeline::execute(PipelineAction action) {
 	switch (action) {
 	case Denoise:
-		return denoiseImage();
+		denoiseImage(); break;
 	case Train:
-		return 0;
+		trainNeuralNetwork(); break;
 	case Classify:
-		return 0;
+		classifyImages(); break;
 	case FullPipeline:
-		return executeFullPipeline();
+		executeFullPipeline(); break;
 	}
-	return 0;
 }
 
-int AstrolabPipeline::denoiseImage() {
+void AstrolabPipeline::denoiseImage() {
 
+	std::string newPath = images_path + "..\\denoised_images\\";
+	AstrolabUtils::createFolder(newPath);
 	vector<string> filenames = AstrolabUtils::getFileNamesFromPath(images_path);
-	vector<cv::Mat> images;
 
 	for (std::vector<int>::size_type i = 0; i < images_count; i++) {		
 		cv::Mat image = cv::imread(images_path + filenames[i]);
 		image_processor.denoise(image);
-		cv::imshow("teste", image);
-		images.push_back(image);
+		cv::imwrite(newPath + "d_" + filenames[i], image);
 	}
-
-	int index{ 0 };
-	std::string newPath = images_path + "..\\denoised_images\\";
-	AstrolabUtils::createFolder(newPath);
-	for (cv::Mat image : images) {
-		cv::imwrite(newPath + filenames[index], image);
-		++index;
-	}
-
-	return 0;
 }
 
-int AstrolabPipeline::trainNeuralNetwork() {
+void AstrolabPipeline::trainNeuralNetwork() {
 	//TODO
-	return 0;
 }
 
-int AstrolabPipeline::classifyImages() {
+void AstrolabPipeline::classifyImages() {
 	//TODO
-	return 0;
 }
 
-int AstrolabPipeline::executeFullPipeline() {
+void AstrolabPipeline::executeFullPipeline() {
 	//TODO
-	return 0;
 }

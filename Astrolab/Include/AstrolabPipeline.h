@@ -25,19 +25,19 @@ private:
 	AstrolabImageProcessor image_processor;
 	AstrolabNeuralNetwork neural_network;
 
-	int denoiseImage();
+	void denoiseImage();
 
-	int trainNeuralNetwork();
+	void trainNeuralNetwork();
 
-	int classifyImages();
+	void classifyImages();
 
-	int executeFullPipeline();
+	void executeFullPipeline();
 
 public:
 
 	AstrolabPipeline();
 		
-	int execute(PipelineAction action);
+	void execute(PipelineAction action);
 
 	void setup(std::string initialPath, int imagesCount);
 

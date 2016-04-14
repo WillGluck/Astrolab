@@ -18,7 +18,7 @@ void AstrolabUtils::waitEnter() {
 	while (true)
 	{
 		int c;
-		c = cv::waitKey(20);
+		c = cv::waitKey(1);
 		if ((char)c == 27)
 		{
 			break;
