@@ -22,4 +22,7 @@ void AstrolabNeuralNetwork::train() {
 	struct fann *ann = fann_create_standard(num_layers, num_input,
 		num_neurons_hidden, num_output);
 
+
+
+
 }

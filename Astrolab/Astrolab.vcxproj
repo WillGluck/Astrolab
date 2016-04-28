@@ -161,6 +161,7 @@
     <ClInclude Include="Include\AstrolabPipeline.h" />
     <ClInclude Include="Include\AstrolabNeuralNetwork.h" />
     <ClInclude Include="Include\DataReducer.h" />
+    <ClInclude Include="Include\ConvNet.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Astrolab.cpp" />
@@ -175,6 +176,7 @@
     <ClCompile Include="Source\AstrolabNeuralNetwork.cpp" />
     <ClCompile Include="Source\AstrolabImageProcessor.cpp" />
     <ClCompile Include="Source\DataReducer.cpp" />
+    <ClCompile Include="Source\ConvNet.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
