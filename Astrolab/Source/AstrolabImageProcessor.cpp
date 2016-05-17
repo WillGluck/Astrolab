@@ -14,6 +14,7 @@ void AstrolabImageProcessor::denoise(cv::Mat &image) {
 	image = image(cv::Rect(106, 106, 212, 212));
 	//cv::GaussianBlur(image, image, cv::Size(3, 3), 0, 0, cv::BORDER_DEFAULT);
 
+	cv::Mat x = cv::Mat::ones(10, 30, CV_8U);
 	cv::Mat gray;
 	cv::Mat binary;
 	cv::Mat final_image;
