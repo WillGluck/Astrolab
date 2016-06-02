@@ -29,4 +29,4 @@ class AstrolabImageProcessor:
 		gray.copyTo(finalImage, maskImage)
 		finalImage.convertTo(finalImage, -1, 1.1, 0)
 
-		return finalImage;
+		return finalImage
