@@ -1,32 +1,32 @@
+import numpy as np
+import cv2
 
 class AstrolabImageProcessor:
 
-    def denoise(image):
-        image = Mat(image, Rect(106, 106, 212, 212))
+    def denoise(self, image):
+        image = image[106:318, 106:318]
 
-        gray = Mat()
-		binary = Mat()
-		finalImage = Mat()
+        binary = np.empty(image.size)
+        finalImage = np.empty(image.size)
 
-		hierarchy = Mat()
-		contours = []
+        gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+        _, binary = cv2.threshold(gray, 20, 255, cv2.THRESH_BINARY)
+        _, contours, hierarchy = cv2.findContours(binary, cv2.RETR_LIST, cv2.CHAIN_APPROX_NONE)
 
-		biggerContour = None
+        biggerContourIndex = 0
+        maxContourSize = 0
+        count = 0
 
-		cv2.cvtColor(image, gray, cv2.COLOR_BGR2GRAY)
-		cv2.threshold(gray, binary, 20, 255, cv2.THRESH_BINARY)
-		cv2.findContours(binary, contours, hierarchy, cv2.RETR_LIST, cv2.CHAIN_APPROX_NONE)
+        for contour in contours:
+            contourSize = cv2.contourArea(contour)
+            if contourSize > maxContourSize:
+                maxContourSize = contourSize
+                biggerContourIndex = count
+            count += 1
 
-		for contour in contours:
-			area = cv2.contourArea(contour)
-			if area < pow(10, 2) or pow(10, 2) < area:
-				if biggerContour == None or cv2.contourArea(contour) > cv2.contourArea(biggerContour)
-					biggerContour = contour
+        mask = np.zeros(binary.shape, np.uint8)
+        mask = cv2.drawContours(mask, contours, biggerContourIndex, (255,255,255), cv2.FILLED)
 
-		maskImage = Mat(image.size(), CvType.CV_8U, Scalar(0));
-		cv2.drawContours(maskImage, contours, contours.indexOf(biggerContour), Scalar(255), Core.FILLED)
+        maskedImage = cv2.bitwise_and(gray, gray, mask=mask)
 
-		gray.copyTo(finalImage, maskImage)
-		finalImage.convertTo(finalImage, -1, 1.1, 0)
-
-		return finalImage
+        return maskedImage
