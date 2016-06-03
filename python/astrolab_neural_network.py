@@ -1,5 +1,4 @@
 import tensorflow as tf
-from loader import MNIST
 
 from tensorflow.examples.tutorials.mnist import input_data
 
@@ -8,21 +7,6 @@ class AstrolabNeuralNetwork:
     def __init__(self):
         self.session = tf.InteractiveSession()
 
-    # def test(self):
-    #
-    #     input_dimension = 784
-    #     output_dimension = 10
-    #
-    #     #BatchSize and Image size
-    #     x = tf.placeholder(tf.float32, shape=[None, input_dimension])
-    #     #Output size
-    #     correct_y = tf.placeholder(tf.float32, shape=[None, output_dimension])
-    #     #Weight
-    #     W = tf.Variable(tf.zeros([input_dimension, output_dimension]))
-    #     #bias
-    #     b = tf.Variable(tf.zeros([output_dimension]))
-    #     #initialize variables on session
-    #     self.session.run(tf.initialize_all_variables())
 
     def create(self):
 
@@ -87,7 +71,9 @@ class AstrolabNeuralNetwork:
         correct_prediction = tf.equal(tf.argmax(predicted_y, 1), tf.argmax(correct_y, 1))
         accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
         self.session.run(tf.initialize_all_variables())
-        for i in range(1000):
+        saver = tf.train.Saver()
+
+        for i in range(20000):
 
             batch = mnist.train.next_batch(50)
 
@@ -110,6 +96,8 @@ class AstrolabNeuralNetwork:
             correct_y: mnist.test.labels,
             resistence:1.0
         }))
+
+        saver.save(self.session, "./trained_variables.ckpt")
 
     def create_random_weights(self, shape):
         random_weights = tf.truncated_normal(shape, stddev=0.1)
