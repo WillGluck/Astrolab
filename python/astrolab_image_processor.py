@@ -4,7 +4,10 @@ import cv2
 class AstrolabImageProcessor:
 
     def denoise(self, image):
-        image = image[106:318, 106:318]
+        #image = image[106:318, 106:318]
+        image_size = 112
+        image_center = image_size / 2
+        image = cv2.resize(image,(image_size, image_size), interpolation = cv2.INTER_CUBIC)
 
         binary = np.empty(image.size)
         finalImage = np.empty(image.size)
@@ -19,7 +22,7 @@ class AstrolabImageProcessor:
 
         for contour in contours:
             contourSize = cv2.contourArea(contour)
-            if contourSize > maxContourSize:
+            if contourSize > maxContourSize and cv2.pointPolygonTest(contour, (image_center, image_center), False) == 1:
                 maxContourSize = contourSize
                 biggerContourIndex = count
             count += 1

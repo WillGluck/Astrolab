@@ -1,4 +1,6 @@
 import tensorflow as tf
+from data import DataWrapper
+import numpy as np
 
 from tensorflow.examples.tutorials.mnist import input_data
 
@@ -12,8 +14,11 @@ class AstrolabNeuralNetwork:
 
         #INIT
 
-        input_dimension = 784
-        output_dimension = 10
+        input_shape = 112
+        input_shape_conved = int(input_shape / 4)
+        input_dimension = input_shape * input_shape
+        output_dimension = 3
+
 
         #BatchSize and Image size
         x = tf.placeholder(tf.float32, shape=[None, input_dimension])
@@ -21,7 +26,15 @@ class AstrolabNeuralNetwork:
         correct_y = tf.placeholder(tf.float32, shape=[None, output_dimension])
 
         #LOAD MNIST
-        mnist = input_data.read_data_sets('MNIST_data', one_hot=True)
+        training_images = None
+        test_images = None
+        training_labels = None
+        test_labels = None
+
+        #data = input_data.read_data_sets('MNIST_data', one_hot=True)
+        data = DataWrapper()
+        data.train.load_labels('/media/willgluck/a2aa6a5f-a88a-45c7-af45-d38ccf2b7639/work/Galaxies/labels.csv')
+        data.train.load_images_names('/media/willgluck/a2aa6a5f-a88a-45c7-af45-d38ccf2b7639/work/Galaxies/images/', input_dimension)
 
         #TODO
 
@@ -32,7 +45,7 @@ class AstrolabNeuralNetwork:
         #32 - output channels
         conv1_b = self.create_random_biases([32])
         #reshape for tensor
-        x_reshaped = tf.reshape(x, [-1, 28, 28, 1])
+        x_reshaped = tf.reshape(x, [-1, input_shape, input_shape, 1])
         #Convolv and apply bias.
         conv1_o = tf.nn.relu(self.do_conv2d(x_reshaped, conv1_W) + conv1_b)
         pool1_o = self.do_max_pool_2x2(conv1_o)
@@ -47,10 +60,10 @@ class AstrolabNeuralNetwork:
 
         #THIRD LAYER - Connected layer
 
-        d1_W = self.create_random_weights([7 * 7 * 64, 1024])
+        d1_W = self.create_random_weights([input_shape_conved * input_shape_conved * 64, 1024])
         d1_b = self.create_random_biases([1024])
 
-        pool2_o_reshaped = tf.reshape(pool2_o, [-1, 7 * 7 * 64])
+        pool2_o_reshaped = tf.reshape(pool2_o, [-1, input_shape_conved * input_shape_conved * 64])
         d1_o = tf.nn.relu(tf.matmul(pool2_o_reshaped, d1_W) + d1_b)
 
         #Dropout output to avoid overfitting
@@ -59,8 +72,8 @@ class AstrolabNeuralNetwork:
 
         #FINAL LAYER - Softmax
 
-        d2_W = self.create_random_weights([1024, 10])
-        d2_b = self.create_random_biases([10])
+        d2_W = self.create_random_weights([1024, output_dimension])
+        d2_b = self.create_random_biases([output_dimension])
 
         predicted_y = tf.nn.softmax(tf.matmul(d1_o_dropout, d2_W) + d2_b)
 
@@ -75,25 +88,28 @@ class AstrolabNeuralNetwork:
 
         for i in range(20000):
 
-            batch = mnist.train.next_batch(50)
+            batch = data.train.next_batch(10)
 
             if i % 100 == 0:
                 train_accuracy = accuracy.eval(feed_dict = {
-                    x:batch[0],
+                    x: batch[0],
                     correct_y:batch[1],
                     resistence:0.5
                 })
                 print("Step %d, training accuracy %g"%(i, train_accuracy))
 
             train_step.run(feed_dict={
-                x:batch[0],
+                x: batch[0],
                 correct_y:batch[1],
                 resistence:0.5
             })
 
+        #saver.restore(self.session, "./trained_variables.ckpt")
+        batch = data.train.next_batch(1000)
+
         print("Test accuracy %g"%accuracy.eval(feed_dict={
-            x: mnist.test.images,
-            correct_y: mnist.test.labels,
+            x: batch[0],
+            correct_y: batch[1],
             resistence:1.0
         }))
 
