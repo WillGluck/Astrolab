@@ -3,54 +3,85 @@ from data import DataWrapper
 from matplotlib import pyplot as plt
 import numpy as np
 
-from tensorflow.examples.tutorials.mnist import input_data
-
 class AstrolabNeuralNetwork:
 
     def __init__(self):
-    
-        self.session = tf.InteractiveSession()
-        self.predicted_y = None        
-        
-        self.input_shape = 112
+
+        self.input_shape = 28
         self.input_shape_conved = int(self.input_shape / 4)
         self.input_dimension = self.input_shape * self.input_shape
-        self.output_dimension = 3
-        
-    def load_graph(self, image):
-        print("temp")
-        
-    
+        self.output_dimension = 10
+
+        self.session = tf.InteractiveSession()
+        self.x = None
+        self.resistence = None
+        self.predicted_y = None
+        self.correct_y = None
+        self.accuracy = None
+        self.train_step = None
+
+        self.load_graph()
+
+
     def classify(self, image):
-        print("test")       
-        
+
+        #BatchSize and Image size
+        x = tf.placeholder(tf.float32, shape=[None, self.input_dimension])
+
         saver = tf.train.Saver()
         saver.restore(self.session, "./trained_variables.ckpt")
-         
-        classification =  sess.run(tf.argmax(self.predicted_y, 1), feed_dict=[x:image])
-        classification = sess.run(tf.argmax(y, 1), feed_dict={x: [img]})
-        
-        plt.imshow(image.reshape(112, 112), cmap=plt.cm.binary)
+
+        #tf.argmax(predicted_y, 1)
+        #print(images)
+        #predicted_y.eval(feed_dict = {x: images})
+        classification =  self.session.run(tf.argmax(self.predicted_y, 1), feed_dict={self.x : [image], self.resistence:1.0})
+
+        print("Prediction: " + str(classification[0]))
+        plt.imshow(image.reshape(28, 28), cmap=plt.cm.binary)
         plt.show()
-        
-        print 'NN predicted', classification[0]
 
 
     def train(self, data_wrapper):
 
+        self.session.run(tf.initialize_all_variables())
+        saver = tf.train.Saver()
+
+        for i in range(20000):
+
+            batch = data_wrapper.train.next_batch(10)
+
+            if i % 100 == 0:
+                train_accuracy = self.accuracy.eval(feed_dict = {
+                    self.x: batch[0],
+                    self.correct_y:batch[1],
+                    self.resistence:0.5
+                })
+                print("Step %d, training accuracy %g"%(i, train_accuracy))
+
+            self.train_step.run(feed_dict={
+                self.x: batch[0],
+                self.correct_y:batch[1],
+                self.resistence:0.5
+            })
+
+        #saver.restore(self.session, "./trained_variables.ckpt")
+        batch = data_wrapper.train.next_batch(1000)
+
+        print("Test accuracy %g"%self.accuracy.eval(feed_dict={
+            self.x: batch[0],
+            self.correct_y: batch[1],
+            self.resistence:1.0
+        }))
+
+        saver.save(self.session, "./trained_variables.ckpt")
+
+
+    def load_graph(self):
+
         #BatchSize and Image size
-        x = tf.placeholder(tf.float32, shape=[None, self.input_dimension])
+        self.x = tf.placeholder(tf.float32, shape=[None, self.input_dimension])
         #Output size
-        correct_y = tf.placeholder(tf.float32, shape=[None, self.output_dimension])
-
-        #LOAD MNIST
-        
-        training_images = None
-        test_images = None
-        training_labels = None
-        test_labels = None
-
-        #TODO
+        self.correct_y = tf.placeholder(tf.float32, shape=[None, self.output_dimension])
 
         #FIRST LAYER
 
@@ -59,7 +90,7 @@ class AstrolabNeuralNetwork:
         #32 - output channels
         conv1_b = self.create_random_biases([32])
         #reshape for tensor
-        x_reshaped = tf.reshape(x, [-1, self.input_shape, self.input_shape, 1])
+        x_reshaped = tf.reshape(self.x, [-1, self.input_shape, self.input_shape, 1])
         #Convolv and apply bias.
         conv1_o = tf.nn.relu(self.do_conv2d(x_reshaped, conv1_W) + conv1_b)
         pool1_o = self.do_max_pool_2x2(conv1_o)
@@ -81,8 +112,8 @@ class AstrolabNeuralNetwork:
         d1_o = tf.nn.relu(tf.matmul(pool2_o_reshaped, d1_W) + d1_b)
 
         #Dropout output to avoid overfitting
-        resistence = tf.placeholder(tf.float32)
-        d1_o_dropout = tf.nn.dropout(d1_o, resistence)
+        self.resistence = tf.placeholder(tf.float32)
+        d1_o_dropout = tf.nn.dropout(d1_o, self.resistence)
 
         #FINAL LAYER - Softmax
 
@@ -93,41 +124,11 @@ class AstrolabNeuralNetwork:
 
         #TRAIN
 
-        cross_entropy = tf.reduce_mean(-tf.reduce_sum(correct_y * tf.log(self.predicted_y), reduction_indices=[1]))
-        train_step = tf.train.AdamOptimizer(1e-4).minimize(cross_entropy)
-        correct_prediction = tf.equal(tf.argmax(self.predicted_y, 1), tf.argmax(correct_y, 1))
-        accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
-        self.session.run(tf.initialize_all_variables())
-        saver = tf.train.Saver()
+        cross_entropy = tf.reduce_mean(-tf.reduce_sum(self.correct_y * tf.log(self.predicted_y), reduction_indices=[1]))
+        self.train_step = tf.train.AdamOptimizer(1e-4).minimize(cross_entropy)
+        correct_prediction = tf.equal(tf.argmax(self.predicted_y, 1), tf.argmax(self.correct_y, 1))
+        self.accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
 
-        for i in range(20000):
-
-            batch = data_wrapper.train.next_batch(10)
-
-            if i % 100 == 0:
-                train_accuracy = accuracy.eval(feed_dict = {
-                    x: batch[0],
-                    correct_y:batch[1],
-                    resistence:0.5
-                })
-                print("Step %d, training accuracy %g"%(i, train_accuracy))
-
-            train_step.run(feed_dict={
-                x: batch[0],
-                correct_y:batch[1],
-                resistence:0.5
-            })
-
-        #saver.restore(self.session, "./trained_variables.ckpt")
-        batch = data_wrapper.train.next_batch(1000)
-
-        print("Test accuracy %g"%accuracy.eval(feed_dict={
-            x: batch[0],
-            correct_y: batch[1],
-            resistence:1.0
-        }))
-
-        saver.save(self.session, "./trained_variables.ckpt")
 
     def create_random_weights(self, shape):
         random_weights = tf.truncated_normal(shape, stddev=0.1)
