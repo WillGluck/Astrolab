@@ -3,6 +3,8 @@ import shutil
 import csv
 import time
 
+#Put inside this file folder the zoo2MainSpecz.csv file from galaxyZoo2
+
 included_cols = [0, 5, 6, 8]
 url = 'http://casjobs.sdss.org/ImgCutoutDR7/getjpeg.aspx?ra={ra}&dec={dec}&width=512&height=512&scale={scale}'
 scale = 0.5

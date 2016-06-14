@@ -1,0 +1,4 @@
+__pycache__/*
+data_generation/zoo2MainSpecz.csv
+trained_variables.ckpt
+
