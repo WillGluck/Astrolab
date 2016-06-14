@@ -34,7 +34,7 @@ data = input_data.read_data_sets('MNIST_data', one_hot=True)
 # data.train.load_labels('/media/willgluck/a2aa6a5f-a88a-45c7-af45-d38ccf2b7639/work/Galaxies/labels.csv')
 # data.train.load_images_names('/media/willgluck/a2aa6a5f-a88a-45c7-af45-d38ccf2b7639/work/Galaxies/images/', input_dimension)
 
-neural_network = AstrolabNeuralNetwork()
+neural_network = AstrolabNeuralNetwork(28, 10)
 image = data.train.next_batch(1)[0][0]
 neural_network.classify(image)
 

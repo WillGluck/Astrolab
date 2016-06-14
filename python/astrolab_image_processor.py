@@ -3,11 +3,10 @@ import cv2
 
 class AstrolabImageProcessor:
 
-    def denoise(self, image):
+    def denoise(self, image, resize_to_size):
         #image = image[106:318, 106:318]
-        image_size = 112
-        image_center = image_size / 2
-        image = cv2.resize(image,(image_size, image_size), interpolation = cv2.INTER_CUBIC)
+        image_center = resize_to_size / 2
+        image = cv2.resize(image,(resize_to_size, resize_to_size), interpolation = cv2.INTER_CUBIC)
 
         binary = np.empty(image.size)
         finalImage = np.empty(image.size)

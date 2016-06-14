@@ -5,12 +5,12 @@ import numpy as np
 
 class AstrolabNeuralNetwork:
 
-    def __init__(self):
+    def __init__(self, input_shape, output_dimension):
 
-        self.input_shape = 28
+        self.input_shape = input_shape
         self.input_shape_conved = int(self.input_shape / 4)
         self.input_dimension = self.input_shape * self.input_shape
-        self.output_dimension = 10
+        self.output_dimension = output_dimension
 
         self.session = tf.InteractiveSession()
         self.x = None
@@ -25,15 +25,9 @@ class AstrolabNeuralNetwork:
 
     def classify(self, image):
 
-        #BatchSize and Image size
-        x = tf.placeholder(tf.float32, shape=[None, self.input_dimension])
-
         saver = tf.train.Saver()
         saver.restore(self.session, "./trained_variables.ckpt")
 
-        #tf.argmax(predicted_y, 1)
-        #print(images)
-        #predicted_y.eval(feed_dict = {x: images})
         classification =  self.session.run(tf.argmax(self.predicted_y, 1), feed_dict={self.x : [image], self.resistence:1.0})
 
         print("Prediction: " + str(classification[0]))
@@ -41,14 +35,14 @@ class AstrolabNeuralNetwork:
         plt.show()
 
 
-    def train(self, data_wrapper):
+    def train(self, data_wrapper, batch_size, iterations):
 
         self.session.run(tf.initialize_all_variables())
         saver = tf.train.Saver()
 
-        for i in range(20000):
+        for i in range(iterations):
 
-            batch = data_wrapper.train.next_batch(10)
+            batch = data_wrapper.train.next_batch(batch_size)
 
             if i % 100 == 0:
                 train_accuracy = self.accuracy.eval(feed_dict = {
@@ -64,7 +58,6 @@ class AstrolabNeuralNetwork:
                 self.resistence:0.5
             })
 
-        #saver.restore(self.session, "./trained_variables.ckpt")
         batch = data_wrapper.train.next_batch(1000)
 
         print("Test accuracy %g"%self.accuracy.eval(feed_dict={
