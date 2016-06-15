@@ -9,8 +9,8 @@ from tensorflow.examples.tutorials.mnist import input_data
 
 
 
-# origin_folder = '/media/willgluck/a2aa6a5f-a88a-45c7-af45-d38ccf2b7639/work/SDDS/old_images/'
-# denoised_training_folder =  '/media/willgluck/a2aa6a5f-a88a-45c7-af45-d38ccf2b7639/work/SDDS/images/'
+origin_folder = '/media/willgluck/a2aa6a5f-a88a-45c7-af45-d38ccf2b7639/work/SDDS/new_images/'
+denoised_training_folder =  '/media/willgluck/a2aa6a5f-a88a-45c7-af45-d38ccf2b7639/work/SDDS/images/'
 
 #
 # test_folder = "/media/willgluck/a2aa6a5f-a88a-45c7-af45-d38ccf2b7639/work/images_test_rev1"
@@ -18,15 +18,16 @@ from tensorflow.examples.tutorials.mnist import input_data
 #
 
 
-# origin_file_name_list = sorted(os.listdir(origin_folder))
+origin_file_name_list = sorted(os.listdir(origin_folder))
 # test_file_name_list = os.listdir(test_folder)
 
-# image_processor = AstrolabImageProcessor()
+image_processor = AstrolabImageProcessor()
 
-# for file_name in origin_file_name_list:
-#     img = cv2.imread(os.path.join(origin_folder, file_name), cv2.IMREAD_UNCHANGED)
-#     img = image_processor.denoise(img)
-#     cv2.imwrite(os.path.join(denoised_training_folder, file_name), img)
+for file_name in origin_file_name_list:
+    img = cv2.imread(os.path.join(origin_folder, file_name), cv2.IMREAD_UNCHANGED)
+    img = image_processor.denoise(img, 112)
+    if img != None:
+        cv2.imwrite(os.path.join(denoised_training_folder, file_name), img)
 
 
 # data = input_data.read_data_sets('MNIST_data', one_hot=True)
