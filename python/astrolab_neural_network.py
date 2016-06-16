@@ -45,6 +45,11 @@ class AstrolabNeuralNetwork:
             batch = data_wrapper.train.next_batch(batch_size)
 
             if i % 100 == 0:
+
+                # print("Prediction: " + str(batch[1][0]))
+                # plt.imshow(batch[0][0].reshape(112, 112), cmap=plt.cm.binary)
+                # plt.show()
+
                 train_accuracy = self.accuracy.eval(feed_dict = {
                     self.x: batch[0],
                     self.correct_y:batch[1],
@@ -58,13 +63,13 @@ class AstrolabNeuralNetwork:
                 self.resistence:0.5
             })
 
-        batch = data_wrapper.train.next_batch(1000)
-
-        print("Test accuracy %g"%self.accuracy.eval(feed_dict={
-            self.x: batch[0],
-            self.correct_y: batch[1],
-            self.resistence:1.0
-        }))
+        # batch = data_wrapper.train.next_batch(1000)
+        #
+        # print("Test accuracy %g"%self.accuracy.eval(feed_dict={
+        #     self.x: batch[0],
+        #     self.correct_y: batch[1],
+        #     self.resistence:1.0
+        # }))
 
         saver.save(self.session, "./trained_variables.ckpt")
 
@@ -96,6 +101,13 @@ class AstrolabNeuralNetwork:
         conv2_o = tf.nn.relu(self.do_conv2d(pool1_o, conv2_W) + conv2_b)
         pool2_o = self.do_max_pool_2x2(conv2_o)
 
+
+        # conv3_W = self.create_random_weights([5, 5, 128, 256])
+        # conv3_b = self.create_random_biases([128])
+        #
+        # conv3_o = tf.nn.relu(self.do_conv2d(pool2_o, conv3_W) + conv3_b)
+        # pool3_o = self.do_max_pool_2x2(conv3_o)
+
         #THIRD LAYER - Connected layer
 
         d1_W = self.create_random_weights([self.input_shape_conved * self.input_shape_conved * 64, 1024])
@@ -117,7 +129,7 @@ class AstrolabNeuralNetwork:
 
         #TRAIN
 
-        cross_entropy = tf.reduce_mean(-tf.reduce_sum(self.correct_y * tf.log(self.predicted_y), reduction_indices=[1]))
+        cross_entropy = tf.reduce_mean(-tf.reduce_sum(self.correct_y * tf.log(self.predicted_y)))
         self.train_step = tf.train.AdamOptimizer(1e-4).minimize(cross_entropy)
         correct_prediction = tf.equal(tf.argmax(self.predicted_y, 1), tf.argmax(self.correct_y, 1))
         self.accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
