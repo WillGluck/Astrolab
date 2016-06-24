@@ -15,23 +15,23 @@ class AstrolabImageProcessor:
         _, binary = cv2.threshold(gray, 20, 255, cv2.THRESH_BINARY)
         _, contours, hierarchy = cv2.findContours(binary, cv2.RETR_LIST, cv2.CHAIN_APPROX_NONE)
 
-        biggerContourIndex = None
+        biggerContourIndex = -1
         maxContourSize = 0
         count = 0
 
         for contour in contours:
             contourSize = cv2.contourArea(contour)
-            if contourSize > maxContourSize and cv2.pointPolygonTest(contour, (image_center, image_center), False) == 1:
+            if contourSize > maxContourSize:
                 maxContourSize = contourSize
                 biggerContourIndex = count
             count += 1
 
-        if biggerContourIndex:
+        if biggerContourIndex != -1:
             mask = np.zeros(binary.shape, np.uint8)
             mask = cv2.drawContours(mask, contours, biggerContourIndex, (255,255,255), cv2.FILLED)
 
-            maskedImage = cv2.bitwise_and(gray, gray, mask=mask)
+            maskedImage = cv2.bitwise_and(image, image, mask=mask)
 
             return maskedImage
         else:
-            return None
+            return []

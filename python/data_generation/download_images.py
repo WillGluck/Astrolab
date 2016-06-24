@@ -7,18 +7,12 @@ import time
 
 included_cols = [0, 5, 6, 8]
 url = 'http://casjobs.sdss.org/ImgCutoutDR7/getjpeg.aspx?ra={ra}&dec={dec}&width=512&height=512&scale={scale}'
-scale = 0.5
+scale = 0.2
 
 with open('zoo2MainSpecz.csv', newline='') as csvfile:
 	spamreader = csv.reader(csvfile, delimiter=',')
 	for row in spamreader:
-		if spamreader.line_num -1 >= 5001:
-			print("stopping")
-			break
-		if spamreader.line_num - 1 >= 2 :
-			if spamreader.line_num % 500 == 0:
-				scale -= 0.05
-				print("Scale updated to " + str(scale))
+		if spamreader.line_num >= 1006 and spamreader.line_num <= 1312:
 			content = list(row[i] for i in included_cols)
 			if content:
 				formatted_url = url.format(ra=content[1], dec=content[2], scale=scale)

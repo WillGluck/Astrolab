@@ -3,13 +3,13 @@ import cv2
 import csv
 import numpy as np
 from util import Util
+import tensorflow as tf
 
 class DataWrapper:
 
-    def __init__(self):
+    def __init__(self, saved_variables_path):
         self.train = Data()
         self.test = Data()
-
 
 class Data:
 
@@ -50,12 +50,19 @@ class Data:
 
         # print(images_batch)
         # print(labels_batch)
-        return self.load_images_from_names(images_batch), np.reshape(labels_batch, (-1, 2))
+        return self.load_images_from_names(images_batch), labels_batch
+
 
     def load_images_from_names(self, images_names):
+        # images = []
+        # for name in images_names:
+        #     images.append(cv2.imread(os.path.join(self.images_path, name), 0))
+
         images = []
         for name in images_names:
-            images.append(cv2.imread(os.path.join(self.images_path, name), 0))
+            image = cv2.imread(os.path.join(self.images_path, name))
+            images.append(cv2.normalize(image.astype('float'), None, 0.0, 1.0, cv2.NORM_MINMAX))
+
         return np.reshape(images, (-1, self.image_dimension))
 
 
@@ -66,7 +73,7 @@ class Data:
             for row in reader:
 
                 content = None
-                content = list(row[i] for i in [1])
+                content = list(row[i] for i in [0])
 
                 value = np.zeros(labels_size)
                 value[int(content[0])] = 1
@@ -76,6 +83,6 @@ class Data:
     def load_images_names(self, path, image_dimension):
         #'/media/willgluck/a2aa6a5f-a88a-45c7-af45-d38ccf2b7639/work/Galaxies/images/'
         self.images_path = path
-        self.image_dimension = image_dimension
+        self.image_dimension = image_dimension * image_dimension
         self.images_names = Util.sort_nicely(os.listdir(path))
         print("images count: " + str(len(self.images_names)))
