@@ -5,7 +5,7 @@ import os
 import csv
 from util import Util
 
-size = 28
+size = 112
 
 from  astrolab_image_processor import AstrolabImageProcessor
 
@@ -16,7 +16,7 @@ images = Util.sort_nicely(os.listdir(images_source))
 
 with open('/media/willgluck/a2aa6a5f-a88a-45c7-af45-d38ccf2b7639/work/SDDS/zoo2MainSpecz.csv', newline='') as csvfile:
     spamreader = csv.reader(csvfile, delimiter=',')
-    with open('/media/willgluck/a2aa6a5f-a88a-45c7-af45-d38ccf2b7639/work/DATASET/train/labels.csv', 'w') as labelfile:
+    with open('/media/willgluck/a2aa6a5f-a88a-45c7-af45-d38ccf2b7639/work/DATASET/train/labels/' + str(size) + '/labels.csv', 'w') as labelfile:
         spamwriter = csv.writer(labelfile)
 
         for row in spamreader:

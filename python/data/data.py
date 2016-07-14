@@ -7,7 +7,7 @@ import tensorflow as tf
 
 class DataWrapper:
 
-    def __init__(self, saved_variables_path):
+    def __init__(self):
         self.train = Data()
         self.test = Data()
 

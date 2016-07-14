@@ -29,7 +29,6 @@ class AstrolabNeuralNetwork:
 
         self.load_graph()
 
-
     def classify(self, image):
 
         if os.path.isfile(self.saved_variables_path):
@@ -37,7 +36,7 @@ class AstrolabNeuralNetwork:
             saver = tf.train.Saver()
             saver.restore(self.session, self.saved_variables_path)
 
-            classification =  self.session.run(tf.argmax(self.predicted_y, 1), feed_dict={self.x : image, self.resistence:1.0})
+            classification =  self.session.run(self.predicted_y, feed_dict={self.x : image, self.resistence:1.0})
 
             return classification
 
@@ -69,8 +68,9 @@ class AstrolabNeuralNetwork:
                     self.resistence:1.0
                 }))
 
-                saver.save(self.session, self.saved_variables_path)
-                print("Saving variables")
+                if i != 0:
+                    saver.save(self.session, self.saved_variables_path)
+                    print("Saving variables")
 
 
             _, loss_val = self.session.run([self.train_step, self.cross_entropy], feed_dict={
@@ -81,9 +81,8 @@ class AstrolabNeuralNetwork:
 
             if i % 100 == 0:
                 print("Loss: " + str(loss_val))
-            #     print("\n\n\n\n\n")
 
-        # saver.save(self.session, self.saved_variables_path)
+        saver.save(self.session, self.saved_variables_path)
 
 
     def load_graph(self):
@@ -119,7 +118,7 @@ class AstrolabNeuralNetwork:
         #
         # conv3_o = tf.nn.relu(self.do_conv2d(pool2_o, conv3_W) + conv3_b)
         # pool3_o = self.do_max_pool_2x2(conv3_o)
-        #
+
         # conv4_W = self.create_random_weights([5, 5, 128, 256])
         # conv4_b = self.create_random_biases([256])
         #
@@ -134,7 +133,6 @@ class AstrolabNeuralNetwork:
         d1_W = self.create_random_weights([self.input_shape_conved * self.input_shape_conved * filter_count, neurons_count])
         d1_b = self.create_random_biases([neurons_count])
 
-        #TODO mudar de pool2 para pool3
         pool2_o_reshaped = tf.reshape(pool2_o, [-1, self.input_shape_conved * self.input_shape_conved * filter_count])
         d1_o = tf.nn.relu(tf.matmul(pool2_o_reshaped, d1_W) + d1_b)
 
@@ -145,7 +143,6 @@ class AstrolabNeuralNetwork:
 
         #Dropout output to avoid overfitting
         self.resistence = tf.placeholder(tf.float32)
-        # TODO mudar de d1 para d2
         d1_o_dropout = tf.nn.dropout(d1_o, self.resistence)
 
         #FINAL LAYER - Softmax
